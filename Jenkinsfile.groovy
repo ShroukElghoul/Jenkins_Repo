@@ -2,6 +2,24 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout merge commit') {
+            steps {
+                script {
+                    if (env.CHANGE_ID) {
+                        // Build the test merge commit (PR + master)
+                        checkout([
+                            $class: 'GitSCM',
+                            userRemoteConfigs: [[url: "https://github.com/USER/REPO.git"]],
+                            branches: [[name: "refs/pull/${env.CHANGE_ID}/merge"]]
+                        ])
+                    } else {
+                        // Normal master build
+                        checkout scm
+                    }
+                }
+            }
+        }
+
         stage('Prepare Build Directory') {
             steps {
                 // Create 'build' directory
