@@ -2,6 +2,18 @@ pipeline {
     agent any
 
     stages {
+        stage('Temp:Test GitHub Access') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: 'master']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/ShroukElghoul/Jenkins_Repo.git',
+                        credentialsId: 'Jenkins_user'
+                    ]]
+                ])
+            }
+        }
         stage('Checkout merge commit') {
             steps {
                 script {
