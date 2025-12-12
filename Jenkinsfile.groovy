@@ -2,35 +2,27 @@ pipeline {
     agent any
 
     stages {
-        stage('Temp:Test GitHub Access') {
-            steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: 'master']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/ShroukElghoul/Jenkins_Repo.git',
-                        credentialsId: 'Jenkins_user'
-                    ]]
-                ])
-            }
-        }
-        stage('Checkout merge commit') {
+        stage('Checkout PR merge commit') {
             steps {
                 script {
                     if (env.CHANGE_ID) {
-                        // Build the test merge commit (PR + master)
+                        // Build the PR merge commit
                         checkout([
                             $class: 'GitSCM',
-                            userRemoteConfigs: [[url: "https://github.com/USER/REPO.git"]],
-                            branches: [[name: "refs/pull/${env.CHANGE_ID}/merge"]]
+                            branches: [[name: "refs/remotes/origin/pr/${env.CHANGE_ID}"]],
+                            userRemoteConfigs: [[
+                                url: 'https://github.com/ShroukElghoul/Jenkins_Repo.git',
+                                credentialsId: 'Jenkins_user'
+                            ]]
                         ])
                     } else {
-                        // Normal master build
+                        // Build master normally
                         checkout scm
                     }
                 }
             }
         }
+
 
         stage('Prepare Build Directory') {
             steps {
