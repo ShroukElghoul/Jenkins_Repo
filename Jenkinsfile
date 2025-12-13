@@ -2,28 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout PR merge commit') {
-            steps {
-                script {
-                    if (env.CHANGE_ID) {
-                        // Build the PR merge commit
-                        checkout([
-                            $class: 'GitSCM',
-                            branches: [[name: "refs/remotes/origin/pr/${env.CHANGE_ID}"]],
-                            userRemoteConfigs: [[
-                                url: 'https://github.com/ShroukElghoul/Jenkins_Repo.git',
-                                credentialsId: 'github-creds'
-                            ]]
-                        ])
-                    } else {
-                        // Build master normally
-                        checkout scm
-                    }
-                }
-            }
-        }
-
-
         stage('Prepare Build Directory') {
             steps {
                 // Create 'build' directory
