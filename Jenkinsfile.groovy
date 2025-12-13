@@ -12,7 +12,7 @@ pipeline {
                             branches: [[name: "refs/remotes/origin/pr/${env.CHANGE_ID}"]],
                             userRemoteConfigs: [[
                                 url: 'https://github.com/ShroukElghoul/Jenkins_Repo.git',
-                                credentialsId: 'Jenkins_user'
+                                credentialsId: 'github-creds'
                             ]]
                         ])
                     } else {
